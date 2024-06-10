@@ -2,6 +2,7 @@ const GITHUB_REPO = 'https://api.github.com/repos/MqMrMqR/bank.github.io/content
 const GITHUB_TOKEN = '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'; // Keep this token secure!
 
 let accounts = {};
+let currentUser = null;
 
 async function loadAccounts() {
     try {
@@ -14,7 +15,6 @@ async function loadAccounts() {
         const data = await response.json();
         const content = atob(data.content);
         accounts = JSON.parse(content);
-        displayAccounts();
     } catch (error) {
         console.error('Error loading accounts:', error);
     }
@@ -37,29 +37,58 @@ async function saveAccounts() {
     });
 }
 
-function createAccount() {
-    const accountName = document.getElementById('account-name').value.trim();
-    if (accountName && !accounts[accountName]) {
-        accounts[accountName] = 0;
-        document.getElementById('account-name').value = '';
-        displayAccounts();
+function showSignUp() {
+    document.getElementById('login-page').style.display = 'none';
+    document.getElementById('signup-page').style.display = 'block';
+}
+
+function showLogin() {
+    document.getElementById('signup-page').style.display = 'none';
+    document.getElementById('login-page').style.display = 'block';
+}
+
+function signUp() {
+    const username = document.getElementById('signup-username').value.trim();
+    if (username && !accounts[username]) {
+        accounts[username] = { balance: 1000 }; // Starting balance
+        document.getElementById('signup-username').value = '';
         saveAccounts();
+        alert('Account created! Please log in.');
+        showLogin();
     } else {
-        alert('Account name is invalid or already exists.');
+        alert('Invalid username or account already exists.');
     }
 }
 
-function transferMoney() {
-    const fromAccount = document.getElementById('from-account').value.trim();
-    const toAccount = document.getElementById('to-account').value.trim();
-    const amount = parseFloat(document.getElementById('amount').value);
-    if (fromAccount in accounts && toAccount in accounts && amount > 0 && accounts[fromAccount] >= amount) {
-        accounts[fromAccount] -= amount;
-        accounts[toAccount] += amount;
-        document.getElementById('from-account').value = '';
-        document.getElementById('to-account').value = '';
-        document.getElementById('amount').value = '';
+function login() {
+    const username = document.getElementById('login-username').value.trim();
+    if (username && accounts[username]) {
+        currentUser = username;
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('signup-page').style.display = 'none';
+        document.getElementById('bank-page').style.display = 'block';
+        document.getElementById('welcome-message').innerText = `Welcome, ${currentUser}!`;
+        updateMoney();
         displayAccounts();
+    } else {
+        alert('Invalid username.');
+    }
+}
+
+function updateMoney() {
+    document.getElementById('money').innerText = accounts[currentUser].balance;
+}
+
+function transferMoney() {
+    const toUsername = document.getElementById('to-username').value.trim();
+    const amount = parseFloat(document.getElementById('transfer-amount').value);
+    if (toUsername in accounts && amount > 0 && accounts[currentUser].balance >= amount) {
+        accounts[currentUser].balance -= amount;
+        accounts[toUsername].balance += amount;
+        document.getElementById('to-username').value = '';
+        document.getElementById('transfer-amount').value = '';
+        updateMoney();
         saveAccounts();
     } else {
         alert('Invalid transfer details.');
@@ -69,9 +98,9 @@ function transferMoney() {
 function displayAccounts() {
     const accountList = document.getElementById('accounts');
     accountList.innerHTML = '';
-    for (const [name, balance] of Object.entries(accounts)) {
+    for (const [name, data] of Object.entries(accounts)) {
         const li = document.createElement('li');
-        li.textContent = `${name}: $${balance}`;
+        li.textContent = `${name}: $${data.balance}`;
         accountList.appendChild(li);
     }
 }

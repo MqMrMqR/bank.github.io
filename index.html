@@ -7,22 +7,34 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>BANK Game</h1>
-    <div id="account-creation">
-        <h2>Create Account</h2>
-        <input type="text" id="account-name" placeholder="Account Name">
-        <button onclick="createAccount()">Create Account</button>
+    <div id="login-page">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username">
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <span onclick="showSignUp()">Sign up</span></p>
     </div>
-    <div id="transfer-money">
-        <h2>Transfer Money</h2>
-        <input type="text" id="from-account" placeholder="From Account">
-        <input type="text" id="to-account" placeholder="To Account">
-        <input type="number" id="amount" placeholder="Amount">
-        <button onclick="transferMoney()">Transfer</button>
+    <div id="signup-page" style="display: none;">
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-username" placeholder="Username">
+        <button onclick="signUp()">Sign Up</button>
+        <p>Already have an account? <span onclick="showLogin()">Login</span></p>
     </div>
-    <div id="account-list">
-        <h2>Accounts</h2>
-        <ul id="accounts"></ul>
+    <div id="bank-page" style="display: none;">
+        <h2>Bank Page</h2>
+        <p id="welcome-message"></p>
+        <div id="money-section">
+            <h3>Money: <span id="money"></span></h3>
+        </div>
+        <div id="transfer-section">
+            <h3>Transfer Money</h3>
+            <input type="text" id="to-username" placeholder="To Username">
+            <input type="number" id="transfer-amount" placeholder="Amount">
+            <button onclick="transferMoney()">Transfer</button>
+        </div>
+        <div id="account-list">
+            <h3>Accounts</h3>
+            <ul id="accounts"></ul>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>

@@ -3,14 +3,21 @@ body {
     padding: 20px;
 }
 
-h1 {
+h2 {
     text-align: center;
-}
-
-#account-creation, #transfer-money, #account-list {
-    margin: 20px 0;
 }
 
 input {
     margin: 5px;
+    display: block;
+}
+
+button {
+    margin: 10px 0;
+    display: block;
+}
+
+#login-page, #signup-page, #bank-page {
+    max-width: 300px;
+    margin: 0 auto;
 }
