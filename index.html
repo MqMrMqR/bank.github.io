@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BANK Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>BANK Game</h1>
+    <div id="account-creation">
+        <h2>Create Account</h2>
+        <input type="text" id="account-name" placeholder="Account Name">
+        <button onclick="createAccount()">Create Account</button>
+    </div>
+    <div id="transfer-money">
+        <h2>Transfer Money</h2>
+        <input type="text" id="from-account" placeholder="From Account">
+        <input type="text" id="to-account" placeholder="To Account">
+        <input type="number" id="amount" placeholder="Amount">
+        <button onclick="transferMoney()">Transfer</button>
+    </div>
+    <div id="account-list">
+        <h2>Accounts</h2>
+        <ul id="accounts"></ul>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
