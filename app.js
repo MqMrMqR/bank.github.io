@@ -1,5 +1,5 @@
 const GITHUB_REPO = 'https://api.github.com/repos/MqMrMqR/bank.github.io/contents/accounts.json';
-const GITHUB_TOKEN = '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'; // Keep this token secure!
+const GITHUB_TOKEN = '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'; // Replace with your actual token
 
 let accounts = {};
 let currentUser = null;
