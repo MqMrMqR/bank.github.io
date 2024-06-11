@@ -1,15 +1,15 @@
 const GITHUB_REPO = 'https://api.github.com/repos/MqMrMqR/bank.github.io/contents/accounts.json';
-const GITHUB_TOKEN = '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'; // Replace with your actual token
+const GITHUB_TOKEN = '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'; // Replace with your actual token
 
 let accounts = {};
 let currentUser = null;
-let sha = ''; // Variable to store the SHA of the accounts.json file
+let sha = '';
 
 async function loadAccounts() {
     try {
         const response = await fetch(GITHUB_REPO, {
             headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Authorization': `Bearer ${GITHUB_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
@@ -19,7 +19,7 @@ async function loadAccounts() {
         }
 
         const data = await response.json();
-        sha = data.sha; // Save the SHA of the file
+        sha = data.sha;
         const content = atob(data.content);
         accounts = JSON.parse(content);
         console.log('Accounts loaded:', accounts);
@@ -34,7 +34,7 @@ async function saveAccounts() {
         const response = await fetch(GITHUB_REPO, {
             method: 'PUT',
             headers: {
-                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Authorization': `Bearer ${GITHUB_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             },
@@ -50,7 +50,7 @@ async function saveAccounts() {
         }
 
         const data = await response.json();
-        sha = data.content.sha; // Update the SHA with the new SHA returned by GitHub
+        sha = data.content.sha;
         console.log('Accounts saved:', accounts);
     } catch (error) {
         console.error('Error saving accounts:', error);
@@ -70,7 +70,7 @@ function showLogin() {
 function signUp() {
     const username = document.getElementById('signup-username').value.trim();
     if (username && !accounts[username]) {
-        accounts[username] = { balance: 1000 }; // Starting balance
+        accounts[username] = { balance: 1000 };
         document.getElementById('signup-username').value = '';
         saveAccounts();
         alert('Account created! Please log in.');
