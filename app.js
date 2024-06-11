@@ -1,8 +1,9 @@
 const GITHUB_REPO = 'https://api.github.com/repos/MqMrMqR/bank.github.io/contents/accounts.json';
-const GITHUB_TOKEN = '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'; // Keep this token secure!
+const GITHUB_TOKEN = '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'; // Keep this token secure!
 
 let accounts = {};
 let currentUser = null;
+let sha = ''; // Variable to store the SHA of the accounts.json file
 
 async function loadAccounts() {
     try {
@@ -12,9 +13,16 @@ async function loadAccounts() {
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+        sha = data.sha; // Save the SHA of the file
         const content = atob(data.content);
         accounts = JSON.parse(content);
+        console.log('Accounts loaded:', accounts);
     } catch (error) {
         console.error('Error loading accounts:', error);
     }
@@ -22,19 +30,31 @@ async function loadAccounts() {
 
 async function saveAccounts() {
     const content = btoa(JSON.stringify(accounts, null, 2));
-    const response = await fetch(GITHUB_REPO, {
-        method: 'PUT',
-        headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            message: 'Update accounts',
-            content,
-            sha: (await response.json()).sha
-        })
-    });
+    try {
+        const response = await fetch(GITHUB_REPO, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Update accounts',
+                content,
+                sha
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        sha = data.content.sha; // Update the SHA with the new SHA returned by GitHub
+        console.log('Accounts saved:', accounts);
+    } catch (error) {
+        console.error('Error saving accounts:', error);
+    }
 }
 
 function showSignUp() {
